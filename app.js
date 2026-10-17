@@ -1,0 +1,45 @@
+const projects={
+ ecommerce:{eyebrow:'Independent full-stack build',title:'Full Stack E-Commerce Application',intro:'A commerce application connecting a Laravel API layer with a Nuxt frontend and role-aware product workflows.',role:'Full Stack Developer',tools:'Laravel · MySQL · Vue.js · Nuxt.js',challenge:'Bring authentication, product management, cart behavior and role-based access into one connected application.',contribution:'Built authentication, product management, cart and role-based access control; integrated Laravel APIs with the Nuxt frontend and implemented dynamic UI components.'},
+ liast:{eyebrow:'Client project at Service Eye — sole developer',title:'LIAST Official Website',intro:'Official website for a Lalitpur-based MSc engineering institute with admin-managed content.',role:'Full Stack Developer (Sole)',tools:'Laravel · Blade · Tailwind CSS · Alpine.js',challenge:'Build and launch a multi-section institutional website with content manageable by staff.',contribution:'Developed and launched the website covering programs, admissions, research, alumni and FAQ pages. Built admin-managed content system for hero slides, programs, testimonials, FAQs and SEO fields. Implemented dynamic content loading on courses page with Alpine.js. Added SEO metadata (Open Graph, Twitter cards, per-page descriptions) and responsive Tailwind layout across devices.',outcome:'Live institutional website with easy content updates.',href:'https://liast.edu.np'},
+ businessx:{eyebrow:'Marketing Website & Admin CMS',title:'BusinessX — Marketing Website & Admin CMS',intro:'Built and deployed a marketing website with a custom admin CMS for a CRM and unified inbox product.',role:'Full Stack Developer (Solo)',tools:'Laravel 11 · Inertia.js · Vue 3 · Tailwind CSS',challenge:'Build a full CMS and public site from scratch to manage 10 content sections with validation and media handling.',contribution:'Developed custom admin CMS with full CRUD, status toggles and server-side validation for 10 content sections (pages, blogs, products, brands, pricing, FAQs, contact submissions). Created reusable Vue component system (generic data table, modals, toasts). Designed polymorphic image model with auto cleanup, DB transactions, auto-generated slugs, SEO meta fields and draft publishing for blogs. Implemented responsive public site and admin panel with mobile navigation, authentication with login rate limiting. Added email notifications for demo and application requests.',outcome:'Production-ready marketing site with manageable content.',href:'https://businessx.com.np'},
+ sawari:{eyebrow:'Production team project',title:'Hello Sawari Tour Platform',intro:'A live travel platform where the focus was mobile usability, content features and production collaboration.',role:'Developer, team project',tools:'Responsive UI · Web integration · Production deployment',challenge:'Improve the experience across smaller screens while extending the live platform with content functionality.',contribution:'Implemented mobile responsiveness, developed and integrated blog section features, and collaborated on live feature deployment.',href:'https://tour.hellosawari.com'},
+ deepsana:{eyebrow:'Production team project',title:'Deepsana ServiceEye',intro:'A Laravel-based web application shaped around reusable Blade components and tighter frontend consistency.',role:'Developer, team project',tools:'Laravel · Blade · Frontend integration',challenge:'Keep UI implementation consistent while supporting backend logic and reusable application structure.',contribution:'Developed the Laravel-based application using Blade components, improved UI consistency and code reusability, and assisted with backend logic and frontend integration.',href:'https://deepsana.serviceeye.com.np'},
+ explore:{eyebrow:'Production debugging',title:'Explore ServiceEye',intro:'A focused live-platform fix that restored broken course content rendering.',role:'Developer, team project',tools:'Laravel · Blade · Debugging',challenge:'A Blade template rendering bug was preventing course content from loading.',contribution:'Diagnosed and fixed the template rendering issue.',outcome:'Restored full functionality of the Courses section.',href:'https://explore.serviceeye.com.np'},
+ samyak:{eyebrow:'Production frontend refinement',title:'Samyak Dristi',intro:'Targeted interface fixes focused on icon rendering, responsiveness and visual consistency.',role:'Developer, team project',tools:'Responsive UI · Debugging · Frontend integration',challenge:'Resolve visible rendering and design inconsistencies on the homepage.',contribution:'Fixed the homepage icon rendering issue and corrected design inconsistencies across responsive layouts.',outcome:'Improved UI responsiveness and visual consistency.',href:'https://samyakdristi.serviceeye.com.np'},
+ serviceeye:{eyebrow:'Production content integration',title:'ServiceEye Main Platform',intro:'A live-platform contribution combining new policy pages with responsive content integration.',role:'Developer, team project',tools:'Responsive UI · Content integration',challenge:'Add essential policy content without breaking the site’s responsive presentation.',contribution:'Added Privacy Policy and Terms & Conditions pages and ensured responsive layout and content integration.',href:'https://serviceeye.com.np'}
+};
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+
+// Profile image holder: add profile.jpg beside index.html and it appears automatically.
+const profile=$('#profile-photo'), placeholder=$('#portrait-placeholder');
+if(profile){
+  const showPlaceholder=()=>{profile.style.display='none';placeholder.style.display='flex'};
+  profile.addEventListener('error',showPlaceholder);
+  profile.addEventListener('load',()=>{profile.style.display='block';placeholder.style.display='none'});
+  if(profile.complete){
+    if(profile.naturalWidth===0) showPlaceholder();
+    else {profile.style.display='block';placeholder.style.display='none';}
+  }
+}
+
+const menu=$('.mobile-menu'), menuBtn=$('.menu-button');
+function closeMenu(){menu.classList.remove('open');menu.setAttribute('aria-hidden','true');menuBtn.setAttribute('aria-expanded','false');document.body.style.overflow=''}
+menuBtn.addEventListener('click',()=>{menu.classList.add('open');menu.setAttribute('aria-hidden','false');menuBtn.setAttribute('aria-expanded','true');document.body.style.overflow='hidden'});
+$('.menu-close').addEventListener('click',closeMenu);$$('.mobile-links a').forEach(a=>a.addEventListener('click',closeMenu));
+
+const progress=$('.scroll-progress');addEventListener('scroll',()=>{const max=document.documentElement.scrollHeight-innerHeight;progress.style.transform=`scaleX(${max?scrollY/max:0})`},{passive:true});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}}),{threshold:.1,rootMargin:'0px 0px -40px'});$$('.reveal').forEach(el=>io.observe(el));
+
+const stage=$('#portrait-stage'), card=$('#portrait-card');
+if(stage && matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+  stage.addEventListener('pointermove',e=>{const r=stage.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5;const y=(e.clientY-r.top)/r.height-.5;card.style.transform=`rotate(2deg) rotateY(${x*7}deg) rotateX(${-y*6}deg) translate(${x*5}px,${y*5}px)`});
+  stage.addEventListener('pointerleave',()=>card.style.transform='rotate(2deg)');
+}
+
+const modal=$('.modal-backdrop'), eyebrow=$('.modal-eyebrow'), title=$('#modal-title'), intro=$('.modal-intro'), grid=$('.modal-grid'), link=$('.modal-link');let lastFocus=null;
+function openProject(id){const p=projects[id];if(!p)return;lastFocus=document.activeElement;eyebrow.textContent=p.eyebrow;title.textContent=p.title;intro.textContent=p.intro;const rows=[['Role',p.role],['Tools / focus',p.tools],['Challenge',p.challenge],['Contribution',p.contribution]];if(p.outcome)rows.push(['Outcome',p.outcome]);grid.innerHTML=rows.map(([k,v])=>`<div><span>${k}</span><p>${v}</p></div>`).join('');if(p.href){link.hidden=false;link.href=p.href}else link.hidden=true;modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';$('.modal-close').focus()}
+function closeProject(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';if(lastFocus)lastFocus.focus()}
+$$('[data-project]').forEach(el=>{el.addEventListener('click',()=>openProject(el.dataset.project));el.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ') && !e.target.closest('button')){e.preventDefault();openProject(el.dataset.project)}})});
+$('.modal-close').addEventListener('click',closeProject);modal.addEventListener('mousedown',e=>{if(e.target===modal)closeProject()});
+addEventListener('keydown',e=>{if(e.key==='Escape'){if(modal.classList.contains('open'))closeProject();if(menu.classList.contains('open'))closeMenu()}});
+$('.back-top').addEventListener('click',()=>scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}));
